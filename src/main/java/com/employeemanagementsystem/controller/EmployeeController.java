@@ -1,9 +1,6 @@
 package com.employeemanagementsystem.controller;
 
-
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,53 +11,53 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.employeemanagementsystem.entities.Employees;
 import com.employeemanagementsystem.service.EmployeeService;
-
-
-
 
 @RestController
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeservice;
+
     @GetMapping("/employees")
-    public List<Employees> getEmployees()
+    public ResponseEntity<List<Employees>>  getEmployees()
     {
-        return	this.employeeservice.getEmployees();
+        List<Employees> listOfAllEmps = this.employeeservice.getEmployees();
+        return new ResponseEntity<List<Employees>>(listOfAllEmps, HttpStatus.OK);
     }
+
     @GetMapping("/employees/{employeeId}")
-    public Employees getEmployee(@PathVariable String employeeId)
-    {
-        System.out.println(employeeId);
-        return	this.employeeservice.getEmployee(Long.parseLong(employeeId));
+    public ResponseEntity<Employees>  getEmployee(@PathVariable String employeeId) {
+
+            Employees empRetrieved = this.employeeservice.getEmployee(Long.parseLong(employeeId));
+            return new ResponseEntity<Employees>(empRetrieved, HttpStatus.OK);
 
     }
+
     @PostMapping("/employees")
-    public Employees addEmployee(@RequestBody Employees employee)
+    public ResponseEntity<Employees> addEmployee(@RequestBody Employees employee)
     {
-        System.out.println(employee.getEmpId());
+        return new ResponseEntity<Employees>(this.employeeservice.addEmployee(employee), HttpStatus.CREATED);
+    }
 
-        return this.employeeservice.addEmployee(employee);
-    }
     @PutMapping("/employees")
-    public Employees updateEmployee(@RequestBody Employees employee)
+    public  ResponseEntity<Employees> updateEmployee(@RequestBody Employees employee)
     {
-        return this.employeeservice.updateEmployee(employee);
+
+            Employees employeeSaved = this.employeeservice.updateEmployee(employee);
+            return new ResponseEntity<Employees>(employeeSaved, HttpStatus.CREATED);
+
     }
+
     @DeleteMapping("/employees/{employeeId}")
     public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable String employeeId)
     {
-        try {
-            this.employeeservice.deleteEmployee(Long.parseLong(employeeId));
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(Exception e)
-        {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        this.employeeservice.deleteEmployee(Long.parseLong(employeeId));
+        return new ResponseEntity<>(HttpStatus.OK);
+
+
     }
 }
 
