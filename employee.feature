@@ -6,7 +6,7 @@ Feature: Data posting to Confluent Kafka queues.
 
     Then Validate the status of event detection service
       | status  |
-      | Running |
+      | Runn |
 
   @SMOKE
   Scenario: 2) Get the events from RFID readers and push it to kafka
